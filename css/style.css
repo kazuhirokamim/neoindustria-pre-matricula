@@ -1,0 +1,465 @@
+/* ==========================================================================
+   Design Tokens — Mobile Web (Institucional Claro / SENAI)
+   Projeto Neoindústria (SENAI) · Issue #2 · T7 Retrabalho
+   ========================================================================== */
+
+:root {
+  --bg: #F6F8FA;
+  --surface: #FFFFFF;
+  --border: #D0D7DE;
+  --border-strong: #8C959F;
+  --text: #0F172A;
+  --text-muted: #475569;
+  --brand: #005CAA;
+  --brand-pressed: #004A8A;
+  --focus: #005CAA;
+  --error: #B42318;
+  --error-bg: #FEF3F2;
+  --success: #067647;
+  --success-bg: #ECFDF3;
+  --demo-bg: #FFF4E5;
+  --demo-text: #7A2E0E;
+  --demo-border: #F79009;
+  --radius: 8px;
+  --radius-card: 12px;
+  --shadow: 0 1px 2px rgba(15, 23, 42, 0.06), 0 1px 3px rgba(15, 23, 42, 0.10);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+  padding-bottom: 48px;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 1. Faixa de Demonstração Mandatória (REQ-14) */
+.faixa-demo {
+  background-color: var(--demo-bg);
+  color: var(--demo-text);
+  border-bottom: 2px solid var(--demo-border);
+  font-size: 13px;
+  font-weight: 600;
+  text-align: center;
+  padding: 10px 16px;
+  letter-spacing: 0.3px;
+}
+
+.container {
+  max-width: 440px;
+  margin: 24px auto 0 auto;
+  padding: 0 16px;
+}
+
+/* 2. Cabeçalho Institucional */
+.cabecalho {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.marca-topo {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--brand);
+  margin-bottom: 4px;
+}
+
+.titulo-principal {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+/* 3. Cartão Principal */
+.cartao {
+  background-color: var(--surface);
+  border-radius: var(--radius-card);
+  padding: 24px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+  margin-bottom: 16px;
+}
+
+/* 4. Caixa do Curso Selecionado */
+.curso-box {
+  background-color: #F0F7FF;
+  border-left: 4px solid var(--brand);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 20px;
+}
+
+.curso-cabecalho {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.curso-rotulo {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--brand);
+}
+
+.btn-trocar {
+  background: none;
+  border: none;
+  color: var(--brand);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0;
+}
+
+.curso-titulo {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.curso-meta {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+/* 5. Grade de Cursos (Fallback / Troca) */
+.grade {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  background-color: var(--surface);
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow);
+}
+
+.grade-legenda {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+  padding: 0 8px;
+}
+
+.grade-opcoes {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.radio-cartao {
+  display: flex;
+  align-items: center;
+  min-height: 72px;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  background-color: var(--surface);
+  transition: border-color 0.15s, background-color 0.15s;
+}
+
+.radio-cartao:hover {
+  background-color: var(--bg);
+}
+
+.radio-cartao--selecionado {
+  border: 2px solid var(--brand);
+  background-color: #F0F7FF;
+}
+
+.radio-input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.radio-conteudo {
+  flex: 1;
+}
+
+.radio-titulo {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+  display: block;
+}
+
+.radio-meta {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.radio-check {
+  color: var(--brand);
+  display: flex;
+  align-items: center;
+  margin-left: 12px;
+}
+
+/* 6. Campos de Formulário */
+.campo-grupo {
+  margin-bottom: 20px;
+}
+
+.campo-rotulo {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+
+.input-envoltura {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.campo-input {
+  width: 100%;
+  height: 56px;
+  padding: 0 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 16px;
+  color: var(--text);
+  background-color: var(--surface);
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.campo-input:focus {
+  border-color: var(--focus);
+  outline: 3px solid rgba(0, 92, 170, 0.35);
+}
+
+.campo-input--invalido {
+  border-color: var(--error);
+  background-color: var(--error-bg);
+}
+
+.campo-input--valido {
+  border-color: var(--success);
+}
+
+.icone-validacao {
+  position: absolute;
+  right: 16px;
+  color: var(--success);
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+}
+
+.campo-dica {
+  display: block;
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.campo-erro {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--error);
+  margin-top: 4px;
+  min-height: 18px;
+}
+
+/* 7. Checkboxes Acessíveis (+18 e LGPD) */
+.campo-grupo-checkbox {
+  margin-bottom: 20px;
+}
+
+.checkbox-alvo {
+  display: flex;
+  align-items: flex-start;
+  min-height: 56px;
+  cursor: pointer;
+  position: relative;
+  user-select: none;
+}
+
+.checkbox-input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.checkbox-caixa {
+  width: 24px;
+  height: 24px;
+  min-width: 24px;
+  border: 1.5px solid var(--border-strong);
+  border-radius: 6px;
+  margin-right: 12px;
+  margin-top: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--surface);
+  transition: border-color 0.15s, background-color 0.15s;
+  color: transparent;
+}
+
+.checkbox-input:focus + .checkbox-caixa {
+  outline: 3px solid rgba(0, 92, 170, 0.35);
+  border-color: var(--focus);
+}
+
+.checkbox-input:checked + .checkbox-caixa {
+  background-color: var(--brand);
+  border-color: var(--brand);
+  color: #FFFFFF;
+}
+
+.checkbox-texto {
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--text);
+}
+
+/* Detalhes de Privacidade LGPD */
+.aviso {
+  margin-top: 6px;
+  margin-left: 36px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.aviso-sumario {
+  cursor: pointer;
+  color: var(--brand);
+  font-weight: 500;
+}
+
+.aviso-texto {
+  margin-top: 6px;
+  padding: 8px 12px;
+  background-color: var(--bg);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  line-height: 1.4;
+}
+
+/* 8. Isca Anti-Bot (Honeypot) */
+.isca {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+/* 9. Botão de Envio */
+.btn-enviar {
+  width: 100%;
+  height: 56px;
+  background-color: var(--brand);
+  color: #FFFFFF;
+  border: none;
+  border-radius: var(--radius);
+  font-size: 17px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s;
+  margin-top: 8px;
+}
+
+.btn-enviar:active {
+  background-color: var(--brand-pressed);
+}
+
+.btn-enviar:disabled {
+  background-color: var(--border-strong);
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.status-envio {
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+  padding: 10px;
+  border-radius: var(--radius);
+  margin-bottom: 12px;
+  background-color: var(--error-bg);
+  color: var(--error);
+  border: 1px solid rgba(180, 35, 24, 0.2);
+}
+
+.texto-seguranca {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 14px;
+}
+
+/* 10. Tela de Sucesso */
+.tela-sucesso {
+  text-align: center;
+  padding: 36px 20px;
+}
+
+.sucesso-icone {
+  color: var(--success);
+  margin-bottom: 16px;
+}
+
+.sucesso-titulo {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--success);
+  margin-bottom: 8px;
+  outline: none;
+}
+
+.sucesso-msg {
+  font-size: 15px;
+  color: var(--text);
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+.fechar-destaque {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--brand);
+}
+
+/* 11. Tela Bloqueada */
+.bloqueado-alerta {
+  color: var(--error);
+  margin-bottom: 12px;
+}
+
+.bloqueado-titulo {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--error);
+  margin-bottom: 8px;
+}
+
+.bloqueado-msg {
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
