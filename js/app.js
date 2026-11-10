@@ -8,7 +8,7 @@
  * ============================================================================
  */
 
-var APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxaAc5355AzT58EvznKW9JdjY0-quUb3b6EvI2Jl4mrOohQEPqR0rgKpo45-fok4TMg/exec";
+var APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwIFSKAWR3siUtFTBcZuhOKhPGOSW_tNu2Xxo0LtFRZGVG-x2NA7zu0r-cKHbhkm4tQ/exec";
 
 // Cursos carregados via mobile-web/js/cursos.js (fonte da verdade gerada)
 function obterListaCursos() {
