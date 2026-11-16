@@ -155,30 +155,21 @@ function montarUrlEnvio() {
 var cursoAtivo = null;
 var camposComErro = {};
 
-function initMobileApp() {
-  if (typeof document === "undefined") return;
-
-  var dadosUrl = obterParametrosUrl();
-
-  // 1. Montagem dos cursos na grade de fallback
-  montarGradeCursos();
-
-  // 2. Verificação do Curso (se ausente, mostra a grade de escolha)
-  if (dadosUrl.cursoObjeto) {
-    selecionarCurso(dadosUrl.cursoObjeto);
-  } else {
-    exibirGradeCursos();
-  }
-
-  // 3. Configuração de eventos e validações inline
-  configurarEventosFormulario();
-}
-
-function exibirGradeCursos() {
-  var gradeCursos = document.getElementById("grade-cursos");
+function bloquearAplicacao(titulo, mensagem) {
+  var telaBloqueada = document.getElementById("tela-bloqueada");
+  var formMatricula = document.getElementById("form-matricula");
   var cursoBox = document.getElementById("curso-box");
-  if (gradeCursos) gradeCursos.hidden = false;
+
+  if (formMatricula) formMatricula.hidden = true;
   if (cursoBox) cursoBox.hidden = true;
+
+  if (telaBloqueada) {
+    telaBloqueada.hidden = false;
+    var titEl = telaBloqueada.querySelector(".bloqueado-titulo");
+    var msgEl = telaBloqueada.querySelector(".bloqueado-msg");
+    if (titEl && titulo) titEl.textContent = titulo;
+    if (msgEl && mensagem) msgEl.textContent = mensagem;
+  }
 }
 
 function selecionarCurso(curso) {
@@ -189,72 +180,31 @@ function selecionarCurso(curso) {
   var cursoBox = document.getElementById("curso-box");
   var cursoTitulo = document.getElementById("curso-titulo");
   var cursoMeta = document.getElementById("curso-meta");
-  var gradeCursos = document.getElementById("grade-cursos");
+  var formMatricula = document.getElementById("form-matricula");
+  var telaBloqueada = document.getElementById("tela-bloqueada");
 
   if (cursoTitulo) cursoTitulo.textContent = curso.titulo;
   if (cursoMeta) cursoMeta.textContent = curso.carga_horaria + " · " + curso.modalidade;
 
   if (cursoBox) cursoBox.hidden = false;
-  if (gradeCursos) gradeCursos.hidden = true;
-
-  // Atualiza rádios da grade
-  var radios = document.getElementsByName("radio_curso");
-  for (var i = 0; i < radios.length; i++) {
-    var radioCard = radios[i].parentElement;
-    if (radios[i].value === curso.id) {
-      radios[i].checked = true;
-      if (radioCard) radioCard.className = "radio-cartao radio-cartao--selecionado";
-    } else {
-      radios[i].checked = false;
-      if (radioCard) radioCard.className = "radio-cartao";
-    }
-  }
+  if (formMatricula) formMatricula.hidden = false;
+  if (telaBloqueada) telaBloqueada.hidden = true;
 }
 
-function montarGradeCursos() {
-  var container = document.getElementById("grade-opcoes");
-  if (!container) return;
+function initMobileApp(searchStr) {
+  if (typeof document === "undefined") return;
 
-  while (container.firstChild) {
-    container.removeChild(container.firstChild);
-  }
+  var dadosUrl = obterParametrosUrl(searchStr);
 
-  var cursos = obterListaCursos();
-  for (var i = 0; i < cursos.length; i++) {
-    (function (c) {
-      var label = document.createElement("label");
-      label.className = "radio-cartao";
-
-      var input = document.createElement("input");
-      input.type = "radio";
-      input.name = "radio_curso";
-      input.value = c.id;
-      input.className = "radio-input";
-
-      input.addEventListener("change", function () {
-        if (input.checked) {
-          selecionarCurso(c);
-        }
-      });
-
-      var conteudo = document.createElement("div");
-      conteudo.className = "radio-conteudo";
-
-      var titulo = document.createElement("span");
-      titulo.className = "radio-titulo";
-      titulo.textContent = c.titulo;
-
-      var meta = document.createElement("span");
-      meta.className = "radio-meta";
-      meta.textContent = c.carga_horaria + " · " + c.modalidade;
-
-      conteudo.appendChild(titulo);
-      conteudo.appendChild(meta);
-
-      label.appendChild(input);
-      label.appendChild(conteudo);
-      container.appendChild(label);
-    })(cursos[i]);
+  // Verificação do Curso: se válido, abre o formulário; se ausente ou inválido, bloqueia
+  if (dadosUrl.cursoObjeto) {
+    selecionarCurso(dadosUrl.cursoObjeto);
+    configurarEventosFormulario();
+  } else {
+    bloquearAplicacao(
+      "Curso não identificado",
+      "Para fazer a pré-matrícula, escolha o curso no totem do SENAI e escaneie o QR Code que aparece na tela."
+    );
   }
 }
 
@@ -305,13 +255,6 @@ var validarCpfFn = null;
 var validarWhatsFn = null;
 
 function configurarEventosFormulario() {
-  var btnTrocar = document.getElementById("btn-trocar-curso");
-  if (btnTrocar) {
-    btnTrocar.addEventListener("click", function () {
-      exibirGradeCursos();
-    });
-  }
-
   // Máscaras em tempo real
   var inputCpf = document.getElementById("cpf");
   if (inputCpf) {
@@ -365,17 +308,28 @@ function configurarEventosFormulario() {
 // Submissão Segura
 // ----------------------------------------------------------------------------
 
+var enviando = false;
+
 function submeterFormulario(e) {
   if (e && e.preventDefault) e.preventDefault();
+
+  if (enviando) {
+    return null;
+  }
 
   var isca = document.getElementById("website");
   if (isca && isca.value.trim().length > 0) {
     // Spam bot detectado: encerra silenciosamente
-    return;
+    return null;
   }
 
-  var cpfOk = validarCpfFn ? validarCpfFn(false) : false;
-  var whatsOk = validarWhatsFn ? validarWhatsFn(false) : false;
+  var inputCpf = document.getElementById("cpf");
+  var inputWhats = document.getElementById("whatsapp");
+  var cpfValRaw = inputCpf ? inputCpf.value : "";
+  var whatsValRaw = inputWhats ? inputWhats.value : "";
+
+  var cpfOk = validarCpfFn ? validarCpfFn(false) : validarCPF(cpfValRaw);
+  var whatsOk = validarWhatsFn ? validarWhatsFn(false) : validarWhatsApp(whatsValRaw);
 
   var chkIdade = document.getElementById("declaracao-idade");
   var erroIdade = document.getElementById("erro-idade");
@@ -394,34 +348,39 @@ function submeterFormulario(e) {
   var campoCurso = document.getElementById("campo-curso");
   var cursoEscolhidoId = campoCurso ? campoCurso.value : "";
   if (!cursoEscolhidoId) {
-    exibirGradeCursos();
-    return;
+    bloquearAplicacao(
+      "Curso não identificado",
+      "Para fazer a pré-matrícula, escolha o curso no totem do SENAI e escaneie o QR Code que aparece na tela."
+    );
+    return null;
   }
 
   // Se houver erro, foca o primeiro campo inválido
   if (!cpfOk || !whatsOk || !idadeOk || !consentOk) {
-    if (!cpfOk) { document.getElementById("cpf").focus(); return; }
-    if (!whatsOk) { document.getElementById("whatsapp").focus(); return; }
-    if (!idadeOk) { chkIdade.focus(); return; }
-    if (!consentOk) { chkConsent.focus(); return; }
-    return;
+    if (!cpfOk && inputCpf) { inputCpf.focus(); return null; }
+    if (!whatsOk && inputWhats) { inputWhats.focus(); return null; }
+    if (!idadeOk && chkIdade) { chkIdade.focus(); return null; }
+    if (!consentOk && chkConsent) { chkConsent.focus(); return null; }
+    return null;
   }
 
   var btnEnviar = document.getElementById("btn-enviar");
   var statusEnvio = document.getElementById("status-envio");
   if (statusEnvio) statusEnvio.hidden = true;
 
-  // Bloqueio do botão para evitar envios duplicados
+  // Bloqueio do botão e trava de reenvio
+  enviando = true;
   if (btnEnviar) {
     btnEnviar.disabled = true;
     btnEnviar.textContent = "Enviando…";
   }
 
-  var cpfVal = document.getElementById("cpf").value.trim();
-  var whatsVal = document.getElementById("whatsapp").value.trim();
+  var cpfVal = cpfValRaw.trim();
+  var whatsVal = whatsValRaw.trim();
 
   // Verificação de segurança: não enviar com marcador SEU_ID
   if (APPS_SCRIPT_URL.indexOf("SEU_ID") !== -1) {
+    enviando = false;
     if (statusEnvio) {
       statusEnvio.textContent = "Erro de configuração: o endereço do servidor ainda não foi configurado.";
       statusEnvio.hidden = false;
@@ -430,7 +389,7 @@ function submeterFormulario(e) {
       btnEnviar.disabled = false;
       btnEnviar.textContent = "Tentar de novo";
     }
-    return;
+    return null;
   }
 
   var payload = montarPayload({
@@ -443,7 +402,7 @@ function submeterFormulario(e) {
   var signal = controller ? controller.signal : null;
   var timeoutId = controller ? setTimeout(function () { controller.abort(); }, 15000) : null;
 
-  fetch(montarUrlEnvio(), {
+  return fetch(montarUrlEnvio(), {
     method: "POST",
     headers: { "Content-Type": "text/plain;charset=utf-8" },
     body: JSON.stringify(payload),
@@ -492,6 +451,7 @@ function marcarCampoInvalido(id, mensagem) {
 
 // Só o estado "ok" agradece. Qualquer outra resposta (ou nenhuma) nunca mostra sucesso.
 function tratarRespostaEnvio(data, curso) {
+  enviando = false;
   var estado = data && typeof data.estado === "string" ? data.estado : "";
 
   if (estado === "ok") {
@@ -510,12 +470,10 @@ function tratarRespostaEnvio(data, curso) {
 function mostrarSucesso(curso) {
   var formMatricula = document.getElementById("form-matricula");
   var cursoBox = document.getElementById("curso-box");
-  var gradeCursos = document.getElementById("grade-cursos");
   var telaSucesso = document.getElementById("tela-sucesso");
 
   if (formMatricula) formMatricula.hidden = true;
   if (cursoBox) cursoBox.hidden = true;
-  if (gradeCursos) gradeCursos.hidden = true;
 
   if (telaSucesso) {
     telaSucesso.hidden = false;
@@ -536,7 +494,9 @@ function mostrarSucesso(curso) {
 }
 
 if (typeof document !== "undefined") {
-  document.addEventListener("DOMContentLoaded", initMobileApp);
+  document.addEventListener("DOMContentLoaded", function () {
+    initMobileApp();
+  });
 }
 
 // ----------------------------------------------------------------------------
@@ -552,6 +512,10 @@ if (typeof module !== "undefined" && module.exports) {
     mascararWhatsApp: mascararWhatsApp,
     obterParametrosUrl: obterParametrosUrl,
     tratarRespostaEnvio: tratarRespostaEnvio,
+    submeterFormulario: submeterFormulario,
+    initMobileApp: initMobileApp,
+    bloquearAplicacao: bloquearAplicacao,
+    selecionarCurso: selecionarCurso,
     APPS_SCRIPT_URL: APPS_SCRIPT_URL,
     CURSOS_MAP: CURSOS_MAP
   };

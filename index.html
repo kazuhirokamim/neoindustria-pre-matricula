@@ -20,7 +20,7 @@
     </header>
 
     <main id="palco-mobile">
-      <!-- Estado Bloqueado: link ou SID inválido -->
+      <!-- Estado Bloqueado: curso não identificado -->
       <section id="tela-bloqueada" class="cartao" hidden>
         <div class="bloqueado-alerta" aria-hidden="true">
           <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -29,25 +29,16 @@
             <line x1="12" y1="16" x2="12.01" y2="16"></line>
           </svg>
         </div>
-        <h2 class="bloqueado-titulo">Link inválido</h2>
-        <p class="bloqueado-msg">Este link não é mais válido. Volte ao totem do SENAI e escaneie o código novamente.</p>
+        <h2 class="bloqueado-titulo">Curso não identificado</h2>
+        <p class="bloqueado-msg">Para fazer a pré-matrícula, escolha o curso no totem do SENAI e escaneie o QR Code que aparece na tela.</p>
       </section>
 
       <!-- Cartão de Curso Selecionado -->
       <section id="curso-box" class="curso-box" hidden>
-        <div class="curso-cabecalho">
-          <p class="curso-rotulo">Curso escolhido</p>
-          <button id="btn-trocar-curso" type="button" class="btn-trocar">Trocar curso</button>
-        </div>
+        <p class="curso-rotulo">Curso escolhido</p>
         <h2 id="curso-titulo" class="curso-titulo">Carregando curso…</h2>
         <p id="curso-meta" class="curso-meta"></p>
       </section>
-
-      <!-- Grade de Escolha de Cursos (Fallback ou Troca) -->
-      <fieldset id="grade-cursos" class="grade" hidden>
-        <legend class="grade-legenda">Escolha o curso</legend>
-        <div id="grade-opcoes" class="grade-opcoes"></div>
-      </fieldset>
 
       <!-- Formulário Oficial de Pré-matrícula -->
       <form id="form-matricula" class="cartao" novalidate>

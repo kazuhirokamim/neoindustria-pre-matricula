@@ -98,30 +98,13 @@ body {
   margin-bottom: 20px;
 }
 
-.curso-cabecalho {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 6px;
-}
-
 .curso-rotulo {
   font-size: 12px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   color: var(--brand);
-}
-
-.btn-trocar {
-  background: none;
-  border: none;
-  color: var(--brand);
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  text-decoration: underline;
-  padding: 0;
+  margin-bottom: 6px;
 }
 
 .curso-titulo {
@@ -137,81 +120,7 @@ body {
   color: var(--text-muted);
 }
 
-/* 5. Grade de Cursos (Fallback / Troca) */
-.grade {
-  border: 1px solid var(--border);
-  border-radius: var(--radius-card);
-  background-color: var(--surface);
-  padding: 20px;
-  margin-bottom: 20px;
-  box-shadow: var(--shadow);
-}
-
-.grade-legenda {
-  font-size: 15px;
-  font-weight: 700;
-  color: var(--text);
-  padding: 0 8px;
-}
-
-.grade-opcoes {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-top: 12px;
-}
-
-.radio-cartao {
-  display: flex;
-  align-items: center;
-  min-height: 72px;
-  padding: 14px 16px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  cursor: pointer;
-  background-color: var(--surface);
-  transition: border-color 0.15s, background-color 0.15s;
-}
-
-.radio-cartao:hover {
-  background-color: var(--bg);
-}
-
-.radio-cartao--selecionado {
-  border: 2px solid var(--brand);
-  background-color: #F0F7FF;
-}
-
-.radio-input {
-  position: absolute;
-  opacity: 0;
-  pointer-events: none;
-}
-
-.radio-conteudo {
-  flex: 1;
-}
-
-.radio-titulo {
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--text);
-  display: block;
-}
-
-.radio-meta {
-  font-size: 13px;
-  color: var(--text-muted);
-}
-
-.radio-check {
-  color: var(--brand);
-  display: flex;
-  align-items: center;
-  margin-left: 12px;
-}
-
-/* 6. Campos de Formulário */
+/* 5. Campos de Formulário */
 .campo-grupo {
   margin-bottom: 20px;
 }
