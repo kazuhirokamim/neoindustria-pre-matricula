@@ -51,29 +51,12 @@
 
       <!-- Formulário Oficial de Pré-matrícula -->
       <form id="form-matricula" class="cartao" novalidate>
-        <input type="hidden" id="campo-curso" name="curso" value="">
-        <input type="hidden" id="campo-sid" name="s" value="">
+        <input type="hidden" id="campo-curso" name="curso_id" value="">
 
         <!-- Isca anti-bot (Honeypot) fora da visão sem display:none -->
         <div class="isca" aria-hidden="true">
           <label for="website">Deixe este campo em branco</label>
           <input type="text" name="website" id="website" tabindex="-1" autocomplete="off">
-        </div>
-
-        <div class="campo-grupo">
-          <label for="nome" class="campo-rotulo">Nome completo</label>
-          <div class="input-envoltura">
-            <input type="text" id="nome" name="nome" class="campo-input"
-                   autocomplete="name" autocapitalize="words" maxlength="150"
-                   aria-describedby="dica-nome erro-nome">
-            <span class="icone-validacao" id="ok-nome" aria-hidden="true" hidden>
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="20 6 9 17 4 12"></polyline>
-              </svg>
-            </span>
-          </div>
-          <span class="campo-dica" id="dica-nome">Digite seu nome e sobrenome</span>
-          <p class="campo-erro" id="erro-nome" aria-live="polite"></p>
         </div>
 
         <div class="campo-grupo">
@@ -133,11 +116,12 @@
                 <polyline points="20 6 9 17 4 12"></polyline>
               </svg>
             </span>
-            <span class="checkbox-texto">Concordo com o tratamento dos meus dados para fins exclusivos de contato e pré-matrícula pelo SENAI, em conformidade com a LGPD.</span>
+            <span class="checkbox-texto">Concordo que o SENAI (controlador dos dados) use meus dados para falar comigo por WhatsApp sobre esta pré-matrícula. Estou ciente de que a conversa passa pela Meta (WhatsApp) e pela plataforma de automação n8n.</span>
           </label>
           <details class="aviso">
-            <summary class="aviso-sumario">Ver aviso de privacidade completo (v1.0)</summary>
-            <p class="aviso-texto">O SENAI utilizará seus dados exclusivamente para contato referente a esta pré-matrícula. Os dados serão mantidos em quarentena segura e expurgados conforme a política de retenção da LGPD. Nenhum dado pessoal é transmitido ao robô Cruzr.</p>
+            <summary class="aviso-sumario">Ver aviso de privacidade completo (v2.0)</summary>
+            <p class="aviso-texto">O SENAI usará seu CPF e seu WhatsApp apenas para contato sobre esta pré-matrícula. A conversa pelo WhatsApp é processada pela Meta (que pode tratar dados fora do Brasil) e pelo administrador do n8n, que opera o atendimento automático. Pelo WhatsApp também pediremos seu nome, e-mail e unidade preferida. O CPF não é enviado ao n8n nem à Meta. Para tirar dúvidas ou pedir a exclusão dos dados, procure a secretaria do SENAI.</p>
+            <p class="aviso-texto" style="margin-top: 8px;"><a href="aviso.html" style="color: var(--brand); font-weight: 600; text-decoration: underline;">Ler o aviso completo</a></p>
           </details>
           <p class="campo-erro" id="erro-consentimento" aria-live="polite"></p>
         </div>

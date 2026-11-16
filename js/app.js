@@ -36,20 +36,12 @@ for (var i = 0; i < listaInicial.length; i++) {
 // Validações Puras e Formatadores
 // ----------------------------------------------------------------------------
 
-function validarSid(sid) {
-  if (!sid || typeof sid !== "string") return false;
-  return /^[0-9a-f]{32}$/.test(sid.trim());
-}
-
 function obterParametrosUrl(queryString) {
   var search = queryString != null ? queryString : (typeof window !== "undefined" ? window.location.search : "");
   var params = new URLSearchParams(search);
 
-  // Lê estritamente 's' e 'c' (ignora 'sid' e 'curso')
-  var sParam = params.get("s");
+  // v2: lê somente 'c' (curso_id do cursos.json). Não existe mais sid.
   var cParam = params.get("c");
-
-  var sidValidoResultado = validarSid(sParam) ? sParam.trim() : null;
 
   var cursoValidoResultado = null;
   if (cParam) {
@@ -63,18 +55,9 @@ function obterParametrosUrl(queryString) {
   }
 
   return {
-    s: sidValidoResultado,
     c: cursoValidoResultado ? cursoValidoResultado.id : null,
     cursoObjeto: cursoValidoResultado
   };
-}
-
-function validarNome(nome) {
-  if (!nome || typeof nome !== "string") return false;
-  var limpo = nome.trim();
-  if (limpo.length < 3 || limpo.length > 150) return false;
-  var partes = limpo.split(/\s+/);
-  return partes.length >= 2 && partes[0].length > 0 && partes[1].length > 0;
 }
 
 function validarCPF(cpf) {
@@ -99,20 +82,25 @@ function validarCPF(cpf) {
   return resto === parseInt(num.charAt(10), 10);
 }
 
+var DDDS_VALIDOS = [
+  11, 12, 13, 14, 15, 16, 17, 18, 19,
+  21, 22, 24, 27, 28,
+  31, 32, 33, 34, 35, 37, 38,
+  41, 42, 43, 44, 45, 46, 47, 48, 49,
+  51, 53, 54, 55,
+  61, 62, 63, 64, 65, 66, 67, 68, 69,
+  71, 73, 74, 75, 77, 79,
+  81, 82, 83, 84, 85, 86, 87, 88, 89,
+  91, 92, 93, 94, 95, 96, 97, 98, 99
+];
+
+// v2: celular com DDD real do Brasil + 9 dígitos começando por 9 (11 dígitos no total)
 function validarWhatsApp(tel) {
   if (!tel) return false;
   var num = String(tel).replace(/\D/g, "");
-  if (num.length !== 10 && num.length !== 11) return false;
-
-  var ddd = parseInt(num.substring(0, 2), 10);
-  if (ddd < 11 || ddd > 99) return false;
-
-  // Celulares com 11 dígitos no Brasil exigem o dígito 9 na 3ª posição
-  if (num.length === 11 && num.charAt(2) !== "9") {
-    return false;
-  }
-
-  return true;
+  if (num.length !== 11) return false;
+  if (DDDS_VALIDOS.indexOf(parseInt(num.substring(0, 2), 10)) === -1) return false;
+  return num.charAt(2) === "9";
 }
 
 function mascararCPF(valor) {
@@ -137,6 +125,29 @@ function mascararWhatsApp(valor) {
   return v;
 }
 
+// Monta o corpo enviado ao Apps Script (contrato v2, seção 2.2 do plano)
+function somenteDigitos(valor) {
+  return String(valor || "").replace(/\D/g, "");
+}
+
+function montarPayload(dados) {
+  var d = dados || {};
+  return {
+    cpf: somenteDigitos(d.cpf),
+    whatsapp: somenteDigitos(d.whatsapp),
+    curso_id: String(d.curso_id || "").trim(),
+    aviso_versao: "v2.0",
+    declaracao_idade: true,
+    aceite: true,
+    origem: "celular",
+    website: ""
+  };
+}
+
+function montarUrlEnvio() {
+  return APPS_SCRIPT_URL + "?action=lead";
+}
+
 // ----------------------------------------------------------------------------
 // Inicialização da Interface
 // ----------------------------------------------------------------------------
@@ -149,39 +160,18 @@ function initMobileApp() {
 
   var dadosUrl = obterParametrosUrl();
 
-  // 1. Verificação do SID (bloqueia se inválido ou ausente)
-  if (!dadosUrl.s) {
-    exibirTelaBloqueada();
-    return;
-  }
-
-  var campoSidEl = document.getElementById("campo-sid");
-  if (campoSidEl) campoSidEl.value = dadosUrl.s;
-
-  // 2. Montagem dos cursos na grade de fallback
+  // 1. Montagem dos cursos na grade de fallback
   montarGradeCursos();
 
-  // 3. Verificação do Curso (se ausente, mostra a grade de escolha)
+  // 2. Verificação do Curso (se ausente, mostra a grade de escolha)
   if (dadosUrl.cursoObjeto) {
     selecionarCurso(dadosUrl.cursoObjeto);
   } else {
     exibirGradeCursos();
   }
 
-  // 4. Configuração de eventos e validações inline
+  // 3. Configuração de eventos e validações inline
   configurarEventosFormulario();
-}
-
-function exibirTelaBloqueada() {
-  var telaBloqueada = document.getElementById("tela-bloqueada");
-  var formMatricula = document.getElementById("form-matricula");
-  var cursoBox = document.getElementById("curso-box");
-  var gradeCursos = document.getElementById("grade-cursos");
-
-  if (telaBloqueada) telaBloqueada.hidden = false;
-  if (formMatricula) formMatricula.hidden = true;
-  if (cursoBox) cursoBox.hidden = true;
-  if (gradeCursos) gradeCursos.hidden = true;
 }
 
 function exibirGradeCursos() {
@@ -311,7 +301,6 @@ function configurarCampo(id, validadorFn, mensagemErro) {
   return validar;
 }
 
-var validarNomeFn = null;
 var validarCpfFn = null;
 var validarWhatsFn = null;
 
@@ -338,7 +327,6 @@ function configurarEventosFormulario() {
     });
   }
 
-  validarNomeFn = configurarCampo("nome", validarNome, "Digite seu nome e sobrenome.");
   validarCpfFn = configurarCampo("cpf", validarCPF, "CPF inválido. Confira os 11 números.");
   validarWhatsFn = configurarCampo("whatsapp", validarWhatsApp, "Digite o DDD e o número, por exemplo (11) 91234-5678.");
 
@@ -386,7 +374,6 @@ function submeterFormulario(e) {
     return;
   }
 
-  var nomeOk = validarNomeFn ? validarNomeFn(false) : false;
   var cpfOk = validarCpfFn ? validarCpfFn(false) : false;
   var whatsOk = validarWhatsFn ? validarWhatsFn(false) : false;
 
@@ -412,8 +399,7 @@ function submeterFormulario(e) {
   }
 
   // Se houver erro, foca o primeiro campo inválido
-  if (!nomeOk || !cpfOk || !whatsOk || !idadeOk || !consentOk) {
-    if (!nomeOk) { document.getElementById("nome").focus(); return; }
+  if (!cpfOk || !whatsOk || !idadeOk || !consentOk) {
     if (!cpfOk) { document.getElementById("cpf").focus(); return; }
     if (!whatsOk) { document.getElementById("whatsapp").focus(); return; }
     if (!idadeOk) { chkIdade.focus(); return; }
@@ -431,10 +417,8 @@ function submeterFormulario(e) {
     btnEnviar.textContent = "Enviando…";
   }
 
-  var nomeVal = document.getElementById("nome").value.trim();
   var cpfVal = document.getElementById("cpf").value.trim();
   var whatsVal = document.getElementById("whatsapp").value.trim();
-  var sidVal = document.getElementById("campo-sid").value.trim();
 
   // Verificação de segurança: não enviar com marcador SEU_ID
   if (APPS_SCRIPT_URL.indexOf("SEU_ID") !== -1) {
@@ -449,23 +433,17 @@ function submeterFormulario(e) {
     return;
   }
 
-  var payload = {
-    nome: nomeVal,
+  var payload = montarPayload({
     cpf: cpfVal,
     whatsapp: whatsVal,
-    curso: cursoEscolhidoId,
-    sid: sidVal,
-    website: "",
-    declaracao_idade: true,
-    consentimento: true,
-    versao_aviso: "v1.0"
-  };
+    curso_id: cursoEscolhidoId
+  });
 
   var controller = typeof AbortController !== "undefined" ? new AbortController() : null;
   var signal = controller ? controller.signal : null;
   var timeoutId = controller ? setTimeout(function () { controller.abort(); }, 15000) : null;
 
-  fetch(APPS_SCRIPT_URL, {
+  fetch(montarUrlEnvio(), {
     method: "POST",
     headers: { "Content-Type": "text/plain;charset=utf-8" },
     body: JSON.stringify(payload),
@@ -476,58 +454,60 @@ function submeterFormulario(e) {
       return response.json();
     })
     .then(function (data) {
-      tratarRespostaEnvio(data, nomeVal, cursoAtivo);
+      tratarRespostaEnvio(data, cursoAtivo);
     })
     .catch(function () {
       if (timeoutId) clearTimeout(timeoutId);
-      if (statusEnvio) {
-        statusEnvio.textContent = "Não conseguimos enviar. Verifique sua conexão e tente de novo.";
-        statusEnvio.hidden = false;
-      }
-      if (btnEnviar) {
-        btnEnviar.disabled = false;
-        btnEnviar.textContent = "Tentar de novo";
-      }
+      tratarRespostaEnvio(null, cursoAtivo);
     });
 }
 
-function tratarRespostaEnvio(data, nomeCompleto, curso) {
+var MSG_TENTE_DEPOIS = "Tente novamente em instantes.";
+var MSG_DUPLICADO = "Você já se inscreveu neste curso.";
+var MSG_INVALIDO = "Confira o CPF e o WhatsApp e tente de novo.";
+
+function mostrarErroEnvio(mensagem, textoBotao) {
   var btnEnviar = document.getElementById("btn-enviar");
   var statusEnvio = document.getElementById("status-envio");
-
-  if (data && data.status === "success") {
-    mostrarSucesso(nomeCompleto, curso);
-  } else if (data && data.status === "manutencao") {
-    if (statusEnvio) {
-      statusEnvio.textContent = "O cadastro está em manutenção. Tente novamente em alguns minutos.";
-      statusEnvio.hidden = false;
-    }
-    if (btnEnviar) {
-      btnEnviar.disabled = false;
-      btnEnviar.textContent = "Tentar de novo";
-    }
-  } else if (data && data.status === "error") {
-    if (statusEnvio) {
-      statusEnvio.textContent = data.message || "Falha na validação dos dados.";
-      statusEnvio.hidden = false;
-    }
-    if (btnEnviar) {
-      btnEnviar.disabled = false;
-      btnEnviar.textContent = "Tentar de novo";
-    }
-  } else {
-    if (statusEnvio) {
-      statusEnvio.textContent = "Não conseguimos enviar. Verifique sua conexão e tente de novo.";
-      statusEnvio.hidden = false;
-    }
-    if (btnEnviar) {
-      btnEnviar.disabled = false;
-      btnEnviar.textContent = "Tentar de novo";
-    }
+  if (statusEnvio) {
+    statusEnvio.textContent = mensagem;
+    statusEnvio.hidden = false;
+  }
+  if (btnEnviar) {
+    btnEnviar.disabled = false;
+    btnEnviar.textContent = textoBotao;
   }
 }
 
-function mostrarSucesso(nomeCompleto, curso) {
+function marcarCampoInvalido(id, mensagem) {
+  var input = document.getElementById(id);
+  var erroEl = document.getElementById("erro-" + id);
+  if (input) {
+    input.className = "campo-input campo-input--invalido";
+    input.setAttribute("aria-invalid", "true");
+  }
+  if (erroEl) erroEl.textContent = mensagem;
+  camposComErro[id] = true;
+}
+
+// Só o estado "ok" agradece. Qualquer outra resposta (ou nenhuma) nunca mostra sucesso.
+function tratarRespostaEnvio(data, curso) {
+  var estado = data && typeof data.estado === "string" ? data.estado : "";
+
+  if (estado === "ok") {
+    mostrarSucesso(curso);
+  } else if (estado === "duplicado") {
+    mostrarErroEnvio(MSG_DUPLICADO, "Confirmar pré-matrícula");
+  } else if (estado === "invalido") {
+    marcarCampoInvalido("cpf", "CPF inválido. Confira os 11 números.");
+    marcarCampoInvalido("whatsapp", "Digite o DDD e o número, por exemplo (11) 91234-5678.");
+    mostrarErroEnvio(MSG_INVALIDO, "Confirmar pré-matrícula");
+  } else {
+    mostrarErroEnvio(MSG_TENTE_DEPOIS, "Tentar de novo");
+  }
+}
+
+function mostrarSucesso(curso) {
   var formMatricula = document.getElementById("form-matricula");
   var cursoBox = document.getElementById("curso-box");
   var gradeCursos = document.getElementById("grade-cursos");
@@ -540,18 +520,17 @@ function mostrarSucesso(nomeCompleto, curso) {
   if (telaSucesso) {
     telaSucesso.hidden = false;
 
-    var primeiroNome = String(nomeCompleto || "").trim().split(/\s+/)[0] || "visitante";
     var tituloCurso = (curso && curso.titulo) ? curso.titulo : "seu curso";
 
     var tituloSucesso = document.getElementById("sucesso-titulo");
     var msgSucesso = document.getElementById("sucesso-msg");
 
     if (tituloSucesso) {
-      tituloSucesso.textContent = "Obrigado, " + primeiroNome + "!";
+      tituloSucesso.textContent = "Pré-matrícula enviada!";
       tituloSucesso.focus();
     }
     if (msgSucesso) {
-      msgSucesso.textContent = "Sua pré-matrícula em " + tituloCurso + " foi enviada. O SENAI vai entrar em contato pelo WhatsApp.";
+      msgSucesso.textContent = "Recebemos seu interesse em " + tituloCurso + ". O SENAI vai entrar em contato pelo WhatsApp.";
     }
   }
 }
@@ -567,8 +546,8 @@ if (typeof module !== "undefined" && module.exports) {
   module.exports = {
     validarCPF: validarCPF,
     validarWhatsApp: validarWhatsApp,
-    validarNome: validarNome,
-    validarSid: validarSid,
+    montarPayload: montarPayload,
+    montarUrlEnvio: montarUrlEnvio,
     mascararCPF: mascararCPF,
     mascararWhatsApp: mascararWhatsApp,
     obterParametrosUrl: obterParametrosUrl,

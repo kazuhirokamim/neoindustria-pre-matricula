@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="referrer" content="no-referrer">
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'none'; style-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'">
+  <title>SENAI · Aviso de Privacidade (v2.0)</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .aviso-conteudo h2 {
+      font-size: 18px;
+      color: var(--brand);
+      margin-top: 20px;
+      margin-bottom: 8px;
+    }
+    .aviso-conteudo p, .aviso-conteudo ul, .aviso-conteudo ol {
+      font-size: 14px;
+      color: var(--text);
+      line-height: 1.6;
+      margin-bottom: 12px;
+    }
+    .aviso-conteudo ul, .aviso-conteudo ol {
+      padding-left: 20px;
+    }
+    .aviso-conteudo li {
+      margin-bottom: 6px;
+    }
+    .aviso-minuta-alerta {
+      background-color: var(--demo-bg);
+      border-left: 4px solid var(--demo-border);
+      padding: 12px 14px;
+      border-radius: var(--radius);
+      margin-bottom: 18px;
+      font-size: 13px;
+      color: var(--demo-text);
+      line-height: 1.5;
+    }
+    .aviso-destaque {
+      background-color: var(--bg);
+      border-left: 4px solid var(--brand);
+      padding: 10px 14px;
+      border-radius: var(--radius);
+      margin: 12px 0;
+      font-weight: 500;
+    }
+    .link-voltar-topo {
+      display: inline-block;
+      margin-bottom: 12px;
+      color: var(--brand);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .link-voltar-topo:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <!-- REQ-14 / T7: Faixa de advertência obrigatória -->
+  <div id="banner-demonstracao" class="faixa-demo" role="note">AMBIENTE DE DEMONSTRAÇÃO — use apenas dados fictícios</div>
+
+  <div class="container">
+    <header class="cabecalho">
+      <a href="index.html" class="link-voltar-topo">← Voltar para a pré-matrícula</a>
+      <p class="marca-topo">SENAI · Neoindústria</p>
+      <h1 class="titulo-principal">Aviso de Privacidade</h1>
+      <p class="curso-meta">Versão v2.0 · Minuta técnica em conformidade com a LGPD</p>
+    </header>
+
+    <main class="cartao aviso-conteudo">
+      <div class="aviso-minuta-alerta">
+        <strong>MINUTA, pendente de aprovação do SENAI:</strong> Este documento representa a minuta técnica do aviso de privacidade (Gate G-LGPD v2, Item 2), elaborada pela equipe técnica em linguagem simples e acessível (art. 14, §6º da LGPD). O texto definitivo aguarda ratificação e publicação formal pela diretoria e pelo encarregado de dados do SENAI.
+      </div>
+
+      <h2>1. Quem é o controlador dos seus dados?</h2>
+      <p>O <strong>SENAI — Serviço Nacional de Aprendizagem Industrial</strong> atua como <strong>controlador</strong> dos dados pessoais tratados no âmbito desta pré-matrícula.</p>
+      <ul>
+        <li><strong>Controlador:</strong> SENAI (Departamento Regional de Mato Grosso do Sul)</li>
+        <li><strong>Encarregado pelo Tratamento de Dados Pessoais (DPO):</strong> [A DEFINIR PELO SENAI]</li>
+        <li><strong>Canal de contato com o encarregado:</strong> [A DEFINIR PELO SENAI]</li>
+        <li><strong>Secretaria acadêmica:</strong> [A DEFINIR PELO SENAI]</li>
+      </ul>
+
+      <h2>2. Para que usamos os seus dados? (Finalidade)</h2>
+      <p>A finalidade exclusiva do tratamento é realizar contato com você por WhatsApp para dar prosseguimento à manifestação de interesse e pré-matrícula no curso de sua escolha, esclarecer dúvidas e coletar as informações necessárias para a matrícula formal. Seus dados não são vendidos nem utilizados para envio de mensagens não solicitadas (spam).</p>
+
+      <h2>3. Quais dados coletamos e onde?</h2>
+      <p>A coleta de informações ocorre em duas etapas estruturadas e minimizadas:</p>
+      <ul>
+        <li><strong>No robô totem ou na página web do celular:</strong> CPF (para prevenção de duplicidade e conferência no sistema acadêmico SGE do SENAI), WhatsApp (número com DDD para contato) e curso de interesse selecionado.</li>
+        <li><strong>Na conversa posterior pelo WhatsApp:</strong> Nome completo, e-mail e unidade física do SENAI de sua preferência.</li>
+        <li><strong>Modalidade:</strong> Todos os 58 cursos do catálogo são ofertados na modalidade EAD, portanto não há coleta de modalidade. Demais dados cadastrais e documentos comprobatórios serão requeridos apenas na matrícula definitiva.</li>
+      </ul>
+
+      <h2>4. Compromisso de minimização e proteção do CPF</h2>
+      <div class="aviso-destaque">
+        <strong>O CPF não vai para o n8n nem para a Meta.</strong>
+      </div>
+      <p>O seu CPF é gravado diretamente no banco de dados seguro do SENAI (planilha restrita no Google Sheets). O fluxo de automação de mensagens (n8n) e a plataforma do WhatsApp (Meta) recebem apenas o número de WhatsApp, o nome do curso e o código do atendimento para permitir o diálogo de suporte.</p>
+      <p>No totem, o CPF é mostrado mascarado com apenas os 2 últimos dígitos visíveis enquanto você digita, e a memória da tela é limpa após o envio, ao sair ou após inatividade.</p>
+
+      <h2>5. Qual é a base legal do tratamento?</h2>
+      <p>O tratamento apoia-se em procedimentos preliminares relacionados a contrato do qual o titular seja parte, a pedido do titular (art. 7º, inciso V da LGPD), e no consentimento do titular e de seus responsáveis legais (art. 7º, inciso I e art. 14 da LGPD), formalizado mediante a declaração de que possui 18 anos ou mais ou autorização expressa dos responsáveis.</p>
+
+      <h2>6. Por quanto tempo guardamos os seus dados? (Retenção)</h2>
+      <p>Os registros da pré-matrícula são mantidos por um período de <strong>90 dias</strong> (prazo padrão da política de retenção institucional, sujeito a confirmação pelo SENAI). Ao término do período de 90 dias, os dados são descartados por meio de rotinas automatizadas de purga periódica.</p>
+
+      <h2>7. Informação sobre o histórico de versões do Google Sheets</h2>
+      <p>O histórico de versões do Google Sheets guarda linhas apagadas em seus registros internos de auditoria e revisão da plataforma Google Workspace. O SENAI deliberará sobre as medidas institucionais cabíveis, tais como a recriação periódica manual da planilha por procedimento documentado, a ciência do prazo aos titulares ou a transição para banco de dados relacional com deleção física criptográfica.</p>
+
+      <h2>8. Quem são os operadores que tratam dados?</h2>
+      <p>Para viabilizar este atendimento digital, o SENAI conta com operadores que tratam os dados estritamente sob suas diretrizes:</p>
+      <ol>
+        <li><strong>Google:</strong> Responsável pela infraestrutura do Google Sheets e Google Apps Script, com eventual <strong>transferência internacional</strong> de dados para servidores da Google fora do território nacional;</li>
+        <li><strong>Meta:</strong> Provedora da plataforma do WhatsApp Business API, com <strong>transferência internacional</strong> de dados nos termos das políticas de segurança e privacidade da Meta;</li>
+        <li><strong>Administrador do n8n (<code>respondedigital.com.br</code>):</strong> Responsável pela infraestrutura e execução dos fluxos automatizados de conversação (sem acesso ao seu CPF);</li>
+        <li><strong>GitHub Pages:</strong> Servidor onde fica hospedada a página web pública do celular, que registra o endereço IP de acesso nos logs técnicos da infraestrutura web;</li>
+        <li><strong>A equipe:</strong> A equipe do Projeto Neoindústria atua como operadora técnica sob orientação e supervisão do SENAI.</li>
+      </ol>
+
+      <h2>9. Quais são os seus direitos e como exercê-los?</h2>
+      <p>Conforme previsto no art. 18 da LGPD, você pode, a qualquer tempo:</p>
+      <ul>
+        <li>Confirmar a existência de tratamento e acessar os dados registrados;</li>
+        <li>Corrigir dados incompletos ou inexatos;</li>
+        <li>Solicitar a eliminação dos seus dados da planilha de pré-matrícula;</li>
+        <li>Revogar seu consentimento ou solicitar interrupção do contato respondendo <strong>"SAIR"</strong> ou <strong>"Não fui eu"</strong> no WhatsApp;</li>
+        <li>Para exercer seus direitos perante o controlador, contate a secretaria ou o encarregado pelo canal: <strong>[A DEFINIR PELO SENAI]</strong>.</li>
+      </ul>
+
+      <h2>10. Encarregado pelo Tratamento de Dados Pessoais (DPO)</h2>
+      <ul>
+        <li><strong>Encarregado:</strong> [A DEFINIR PELO SENAI]</li>
+        <li><strong>Canal de atendimento:</strong> [A DEFINIR PELO SENAI]</li>
+      </ul>
+
+      <div style="margin-top: 28px;">
+        <a href="index.html" class="btn-enviar" style="display: block; text-align: center; text-decoration: none;">← Voltar para a pré-matrícula</a>
+      </div>
+    </main>
+  </div>
+</body>
+</html>
+

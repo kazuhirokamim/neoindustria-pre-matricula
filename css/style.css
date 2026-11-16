@@ -463,3 +463,8 @@ body {
   color: var(--text-muted);
   line-height: 1.5;
 }
+
+/* Garante que o atributo hidden esconda elementos mesmo com display definido (ex.: ícone ✓ de validação) */
+[hidden] {
+  display: none !important;
+}
